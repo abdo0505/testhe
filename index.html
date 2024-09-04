@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .search-box {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .anime-card {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .anime-card img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .anime-card h3 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Anime Search</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchQuery" class="search-box" placeholder="Enter anime name..." />
+        <button class="search-button" onclick="searchAnime()">Search</button>
+    </div>
+
+    <div id="results" class="results"></div>
+
+    <script>
+        async function searchAnime() {
+            const query = document.getElementById('searchQuery').value;
+            const response = await fetch(`/api/anime?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            data.forEach(anime => {
+                const animeCard = document.createElement('div');
+                animeCard.className = 'anime-card';
+                animeCard.innerHTML = `
+                    <img src="${anime.imgSrc}" alt="${anime.title}">
+                    <h3>${anime.title}</h3>
+                    <p>Aired: ${anime.aired}</p>
+                    <p>Rating: ${anime.rating}</p>
+                    <a href="${anime.link}" target="_blank">View More</a>
+                `;
+                resultsContainer.appendChild(animeCard);
+            });
+        }
+    </script>
+
+</body>
+</html>
